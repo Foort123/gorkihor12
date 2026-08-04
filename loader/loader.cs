@@ -173,7 +173,9 @@ static class Loader {
         string zipTmp = Path.Combine(Path.GetTempPath(), "gorkivpn_" + Guid.NewGuid().ToString("N") + ".zip");
         try {
             using (var wc = new WebClient()) {
-                ServicePointManager.SecurityProtocol |= SecurityProtocolType.Tls12;
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072; // Tls12
+                wc.Headers.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)");
                 wc.DownloadProgressChanged += (s, e) => {
                     if (progress != null && e.TotalBytesToReceive > 0)
                         progress("download", e.BytesReceived, e.TotalBytesToReceive);
